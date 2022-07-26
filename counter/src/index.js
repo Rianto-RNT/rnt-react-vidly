@@ -5,13 +5,12 @@ import reportWebVitals from "./reportWebVitals";
 
 import "bootstrap/dist/css/bootstrap.css";
 
-// import Counter from "./components/counter";
-import Counters from "./components/counters";
+import App from "./App";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <Counters />
+    <App />
   </React.StrictMode>
 );
 
