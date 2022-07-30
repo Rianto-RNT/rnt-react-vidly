@@ -1,12 +1,14 @@
 import React, { Component } from "react";
 
+import _ from "lodash";
+
 import { getMovies } from "../services/fakeMovieService";
 import { paginate } from "../utils/paginate";
 import { getGenres } from "../services/fakeGenreService";
 
-import Like from "./common/like";
 import Pagination from "./common/pagination";
 import ListGroup from "./common/listGroup";
+import MoviesTable from "./moviesTable";
 
 class Movies extends Component {
   state = {
@@ -14,10 +16,11 @@ class Movies extends Component {
     genres: [],
     currentPage: 1,
     pageSize: 4,
+    sortColumn: { path: "title", order: "asc" },
   };
 
   componentDidMount() {
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
 
     this.setState({ movies: getMovies(), genres });
   }
@@ -43,23 +46,38 @@ class Movies extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
-  render() {
-    const { length: count } = this.state.movies;
+  handleSort = (sortColumn) => {
+    this.setState({ sortColumn });
+  };
+
+  getPagedData = () => {
     const {
       pageSize,
       currentPage,
+      sortColumn,
       selectedGenre,
       movies: allMovies,
     } = this.state;
-
-    if (count === 0) return <p>There are no movie in the database</p>;
 
     const filtered =
       selectedGenre && selectedGenre._id
         ? allMovies.filter((m) => m.genre._id === selectedGenre._id)
         : allMovies;
 
-    const movies = paginate(filtered, currentPage, pageSize);
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize);
+
+    return { totalCount: filtered.length, data: movies };
+  };
+
+  render() {
+    const { length: count } = this.state.movies;
+    const { pageSize, currentPage, sortColumn } = this.state;
+
+    if (count === 0) return <p>There are no movie in the database</p>;
+
+    const { totalCount, data: movies } = this.getPagedData();
 
     return (
       <div className="container-fluid">
@@ -77,55 +95,27 @@ class Movies extends Component {
           <div className="card">
             <div className="card-header">
               <div className="card-title">
-                <p>Showing {filtered.length} movies in the database</p>
+                <p>Showing {totalCount} movies in the database</p>
               </div>
             </div>
 
             <div className="card-body">
-              <table className="table table-striped">
-                <thead>
-                  <tr>
-                    <th className="text-center">Title</th>
-                    <th className="text-center">Genre</th>
-                    <th className="text-center">Stock</th>
-                    <th className="text-center">Rate</th>
-                    <th className="text-center">Likes</th>
-                    <th className="text-center">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {movies.map((movie) => (
-                    <tr key={movie._id}>
-                      <td className="text-start">{movie.title}</td>
-                      <td className="text-center">{movie.genre.name}</td>
-                      <td className="text-center">{movie.numberInStock}</td>
-                      <td className="text-center">{movie.dailyRentalRate}</td>
-                      <td className="text-center">
-                        <Like
-                          liked={movie.liked}
-                          onClick={() => this.handleLike(movie)}
-                        />
-                      </td>
-                      <td className="text-center">
-                        <button
-                          onClick={() => this.handleDelete(movie)}
-                          className="btn btn-danger btn-sm"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="card-footer">
-                <Pagination
-                  itemsCount={filtered.length}
-                  pageSize={pageSize}
-                  currentPage={currentPage}
-                  onPageChange={this.handlePageChange}
-                />
-              </div>
+              <MoviesTable
+                movies={movies}
+                sortColumn={sortColumn}
+                onLike={this.handleLike}
+                onDelete={this.handleDelete}
+                onSort={this.handleSort}
+              />
+            </div>
+
+            <div className="card-footer">
+              <Pagination
+                itemsCount={totalCount}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                onPageChange={this.handlePageChange}
+              />
             </div>
           </div>
         </div>
