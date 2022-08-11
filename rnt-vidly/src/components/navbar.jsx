@@ -5,12 +5,12 @@ import { Link, NavLink } from "react-router-dom";
 const Navbar = () => {
   return (
     <>
-      <nav classname="navbar navbar-expand-lg navbar-light bg-light">
-        <Link classname="navbar-brand" to="/">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <Link className="navbar-brand" to="/">
           RNT-Vidly
         </Link>
         <button
-          classname="navbar-toggler"
+          className="navbar-toggler"
           type="button"
           data-toggle="collapse"
           data-target="#navbarNavAltMarkup"
@@ -18,18 +18,21 @@ const Navbar = () => {
           aria-expanded="false"
           aria-label="Toggle navigation"
         >
-          <span classname="navbar-toggler-icon"></span>
+          <span className="navbar-toggler-icon"></span>
         </button>
-        <div classname="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div classname="navbar-nav">
-            <NavLink classname="nav-item nav-link" to="/movies">
+        <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+          <div className="navbar-nav">
+            <NavLink className="nav-item nav-link" to="/movies">
               Movies
             </NavLink>
-            <NavLink classname="nav-item nav-link" to="/customers">
+            <NavLink className="nav-item nav-link" to="/customers">
               Customers
             </NavLink>
-            <NavLink classname="nav-item nav-link" to="/rentals">
+            <NavLink className="nav-item nav-link" to="/rentals">
               Rentals
+            </NavLink>
+            <NavLink className="nav-item nav-link" to="/login">
+              Login
             </NavLink>
           </div>
         </div>
