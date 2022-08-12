@@ -1,50 +1,67 @@
 import React, { Component } from "react";
 
+import Input from "./common/input";
+
 class LoginForm extends Component {
   state = {
     account: { username: "", password: "" },
+    errors: {},
+  };
+
+  validate = () => {
+    const errors = {};
+
+    const { account } = this.state;
+
+    if (account.username.trim() === "")
+      errors.username = "Username is require.";
+    if (account.password.trim() === "")
+      errors.password = "Password is require.";
+
+    return Object.keys(errors).length === 0 ? null : errors;
   };
 
   handleSubmit = (e) => {
     e.preventDefault();
 
+    const errors = this.validate();
+    console.log(errors);
+    this.setState({ errors });
+    if (errors) return;
+
     // call the server
-    const username = this.username.current.value;
+    console.log("submitted");
+    // const username = this.username.current.value;
   };
 
-  handleChange = (e) => {
+  handleChange = ({ currentTarget: input }) => {
     const account = { ...this.state.account };
 
-    account.username = e.currentTarget.value;
+    account[input.name] = input.value;
     this.setState({ account });
   };
 
   render() {
+    const { account } = this.state;
+
     return (
       <>
         <h3>Login</h3>
         <div className="row">
           <div className="col">
             <form onSubmit={this.handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="username" className="form-label">
-                  Username
-                </label>
-                <input
-                  value={this.state.account.username}
-                  onChange={this.handleChange}
-                  id="username"
-                  type="email"
-                  className="form-control"
-                />
-              </div>
-
-              <div className="mb-3">
-                <label htmlFor="password" className="form-label">
-                  Password
-                </label>
-                <input id="password" type="password" className="form-control" />
-              </div>
+              <Input
+                name="username"
+                value={account.name}
+                label="Username"
+                onChange={this.handleChange}
+              />
+              <Input
+                name="password"
+                value={account.password}
+                label="Password"
+                onChange={this.handleChange}
+              />
 
               <button type="submit" className="btn btn-primary">
                 Login
