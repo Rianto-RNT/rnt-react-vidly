@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import { Route, Redirect, Switch } from "react-router-dom";
 
-import NavBar from "./components/navBar";
+// import NavBar from "./components/navBar";
+import NavBar from "./components/navbar";
 import Movies from "./components/movies";
 import Customers from "./components/customers";
 import NotFound from "./components/notFound";
