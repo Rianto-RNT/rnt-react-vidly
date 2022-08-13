@@ -1,6 +1,5 @@
 import React from "react";
 import Joi from "joi-browser";
-
 import Form from "./common/form";
 
 class LoginForm extends Form {
@@ -15,24 +14,20 @@ class LoginForm extends Form {
   };
 
   doSubmit = () => {
-    // call the server
-    console.log("submitted");
+    // Call the server
+    console.log("Submitted");
   };
 
   render() {
     return (
-      <>
-        <h3>Login</h3>
-        <div className="row">
-          <div className="col">
-            <form onSubmit={this.handleSubmit}>
-              {this.renderInput("username", "Username")}
-              {this.renderInput("password", "Password", "password")}
-              {this.renderButton("Login")}
-            </form>
-          </div>
-        </div>
-      </>
+      <div>
+        <h1>Login</h1>
+        <form onSubmit={this.handleSubmit}>
+          {this.renderInput("username", "Username")}
+          {this.renderInput("password", "Password", "password")}
+          {this.renderButton("Login")}
+        </form>
+      </div>
     );
   }
 }
